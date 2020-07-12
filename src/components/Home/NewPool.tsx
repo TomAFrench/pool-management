@@ -233,7 +233,7 @@ const NewPool = observer(() => {
     };
 
     const handleUnlockButtonClick = async () => {
-        await tokenStore.approveMax(lockedToken, proxyAddress);
+        // await tokenStore.approveMax(lockedToken, proxyAddress);
     };
 
     const handleInputChange = async event => {

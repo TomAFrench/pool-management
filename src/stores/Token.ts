@@ -9,7 +9,6 @@ import { FetchCode } from './Transaction';
 import { BigNumber } from 'utils/bignumber';
 import { AsyncStatus, UserAllowanceFetch } from './actions/fetch';
 import { BigNumberMap } from '../types';
-import { ActionResponse } from './actions/actions';
 
 const tokenAbi = require('../abi/TestToken').abi;
 
@@ -365,31 +364,31 @@ export default class TokenStore {
         return undefined;
     }
 
-    @action approveMax = async (
-        tokenAddress,
-        spender
-    ): Promise<ActionResponse> => {
-        const { providerStore } = this.rootStore;
-        return await providerStore.sendTransaction(
-            ContractTypes.TestToken,
-            tokenAddress,
-            'approve',
-            [spender, helpers.MAX_UINT.toString()]
-        );
-    };
+    // @action approveMax = async (
+    //     tokenAddress,
+    //     spender
+    // ): Promise<ActionResponse> => {
+    //     const { providerStore } = this.rootStore;
+    //     return await providerStore.sendTransaction(
+    //         ContractTypes.TestToken,
+    //         tokenAddress,
+    //         'approve',
+    //         [spender, helpers.MAX_UINT.toString()]
+    //     );
+    // };
 
-    @action revokeApproval = async (
-        tokenAddress,
-        spender
-    ): Promise<ActionResponse> => {
-        const { providerStore } = this.rootStore;
-        return await providerStore.sendTransaction(
-            ContractTypes.TestToken,
-            tokenAddress,
-            'approve',
-            [spender, 0]
-        );
-    };
+    // @action revokeApproval = async (
+    //     tokenAddress,
+    //     spender
+    // ): Promise<ActionResponse> => {
+    //     const { providerStore } = this.rootStore;
+    //     return await providerStore.sendTransaction(
+    //         ContractTypes.TestToken,
+    //         tokenAddress,
+    //         'approve',
+    //         [spender, 0]
+    //     );
+    // };
 
     @action fetchTotalSupplies = async (
         tokensToTrack: string[]

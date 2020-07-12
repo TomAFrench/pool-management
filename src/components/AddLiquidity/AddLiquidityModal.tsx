@@ -414,7 +414,7 @@ const AddLiquidityModal = observer((props: Props) => {
         token?: PoolToken
     ) => {
         if (action === ButtonAction.UNLOCK) {
-            await tokenStore.approveMax(token.address, proxyAddress);
+            // await tokenStore.approveMax(token.address, proxyAddress);
         } else if (action === ButtonAction.ADD_LIQUIDITY) {
             // Add Liquidity
 

@@ -269,31 +269,31 @@ const AddAssetTable = observer((props: Props) => {
         addLiquidityFormStore.setApprovalCheckboxChecked(tokenAddress, checked);
 
         if (checked) {
-            const response = await tokenStore.approveMax(
-                tokenAddress,
-                proxyAddress
-            );
+            // const response = await tokenStore.approveMax(
+            //     tokenAddress,
+            //     proxyAddress
+            // );
 
             // Revert change on metamask error
-            if (response.error) {
-                addLiquidityFormStore.setApprovalCheckboxChecked(
-                    tokenAddress,
-                    !checked
-                );
-            }
+            // if (response.error) {
+            //     addLiquidityFormStore.setApprovalCheckboxChecked(
+            //         tokenAddress,
+            //         !checked
+            //     );
+            // }
         } else {
-            const response = await tokenStore.revokeApproval(
-                tokenAddress,
-                proxyAddress
-            );
+            // const response = await tokenStore.revokeApproval(
+            //     tokenAddress,
+            //     proxyAddress
+            // );
 
             // Revert change on metamask error
-            if (response.error) {
-                addLiquidityFormStore.setApprovalCheckboxChecked(
-                    tokenAddress,
-                    !checked
-                );
-            }
+            // if (response.error) {
+            //     addLiquidityFormStore.setApprovalCheckboxChecked(
+            //         tokenAddress,
+            //         !checked
+            //     );
+            // }
         }
     };
 

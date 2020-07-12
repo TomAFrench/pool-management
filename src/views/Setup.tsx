@@ -65,18 +65,18 @@ const Setup = observer(() => {
         if (isInstanceReady()) {
             history.goBack();
         } else {
-            const tx = await providerStore.sendTransaction(
-                ContractTypes.DSProxyRegistry,
-                contractMetadataStore.getDsProxyRegistryAddress(),
-                'build',
-                []
-            );
-            if (tx.error) {
-                return;
-            }
-            proxyStore.setDeploying(true);
-            await tx.txResponse.wait(10);
-            proxyStore.setDeploying(false);
+            // const tx = await providerStore.sendTransaction(
+            //     ContractTypes.DSProxyRegistry,
+            //     contractMetadataStore.getDsProxyRegistryAddress(),
+            //     'build',
+            //     []
+            // );
+            // if (tx.error) {
+            //     return;
+            // }
+            // proxyStore.setDeploying(true);
+            // await tx.txResponse.wait(10);
+            // proxyStore.setDeploying(false);
         }
     };
 
