@@ -4,7 +4,6 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import initSdk, { SdkInstance, SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 import { ActionResponse, sendAction } from './actions/actions';
-import { web3Window as window } from 'provider/Web3Window';
 import { backupUrls, supportedChainId } from 'provider/connectors';
 import { Interface } from '@ethersproject/abi';
 
