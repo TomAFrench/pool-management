@@ -84,9 +84,6 @@ type FunctionCall = {
     overrides?: any
 }
 
-const safeMultisigUrls: RegExp[] = [/http:\/\/localhost:3000/];
-
-
 export default class ProviderStore {
     @observable chainData: ChainData;
     @observable providerStatus: ProviderStatus;
@@ -103,7 +100,7 @@ export default class ProviderStore {
         this.providerStatus.injectedActive = false;
         this.providerStatus.backUpLoaded = false;
         this.providerStatus.activeProvider = null;
-        this.safeStatus.gnosisSdk = initSdk(safeMultisigUrls)
+        this.safeStatus.gnosisSdk = initSdk()
 
         this.handleNetworkChanged = this.handleNetworkChanged.bind(this);
         this.handleClose = this.handleClose.bind(this);
