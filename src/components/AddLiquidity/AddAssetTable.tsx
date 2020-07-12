@@ -51,7 +51,7 @@ const TableRow = styled.div`
 const TableCell = styled.div`
     display: flex;
     align-items: center;
-    width: ${props => props.width || '25%'};
+    width: ${props => props.width || '33%'};
 `;
 
 const TableCellRight = styled(TableCell)`
@@ -85,62 +85,6 @@ const MaxLink = styled.div`
 
 const RadioButtonWrapper = styled.div`
     margin-right: 8px;
-`;
-
-const Toggle = styled.label`
-    position: relative;
-    display: inline-block;
-    width: 42px;
-    height: 24px;
-    input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-`;
-
-const ToggleInput = styled.input`
-    &:checked + span {
-        background-color: var(--highlighted-selector-background);
-    }
-    &:checked + span:before {
-        -webkit-transform: translateX(18px);
-        -ms-transform: translateX(18px);
-        transform: translateX(18px);
-        background-color: var(--slider-main);
-        background-image: url('Checkbox.svg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 14px 14px;
-    }
-    &:focus + span {
-        box-shadow: 0 0 1px #2196f3;
-    }
-`;
-
-const ToggleSlider = styled.span`
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--highlighted-selector-background);
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-    border-radius: 18px;
-    :before {
-        position: absolute;
-        content: '';
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: var(--input-text);
-        -webkit-transition: 0.4s;
-        transition: 0.4s;
-        border-radius: 50%;
-    }
 `;
 
 const InputWrapper = styled.div`
@@ -216,7 +160,6 @@ const AddAssetTable = observer((props: Props) => {
             poolStore,
             tokenStore,
             providerStore,
-            proxyStore,
             contractMetadataStore,
             addLiquidityFormStore,
         },
@@ -225,17 +168,10 @@ const AddAssetTable = observer((props: Props) => {
     const account = providerStore.providerStatus.account;
 
     const pool = poolStore.getPool(poolAddress);
-    const proxyAddress = proxyStore.getInstanceAddress();
     let userBalances: undefined | BigNumberMap;
-    let accountApprovalsLoaded = false;
 
     if (pool) {
         userBalances = tokenStore.getAccountBalances(pool.tokensList, account);
-        accountApprovalsLoaded = tokenStore.areAccountApprovalsLoaded(
-            poolStore.getPoolTokens(pool.address),
-            account,
-            proxyAddress
-        );
     }
 
     const handleMaxLinkClick = async (
@@ -260,41 +196,6 @@ const AddAssetTable = observer((props: Props) => {
 
         addLiquidityFormStore.setJoinRatio(ratio);
         addLiquidityFormStore.refreshInputAmounts(pool, account, ratio);
-    };
-
-    const handleCheckboxChange = async (event, tokenAddress: string) => {
-        const { checked } = event.target;
-
-        addLiquidityFormStore.setApprovalCheckboxTouched(tokenAddress, true);
-        addLiquidityFormStore.setApprovalCheckboxChecked(tokenAddress, checked);
-
-        if (checked) {
-            // const response = await tokenStore.approveMax(
-            //     tokenAddress,
-            //     proxyAddress
-            // );
-
-            // Revert change on metamask error
-            // if (response.error) {
-            //     addLiquidityFormStore.setApprovalCheckboxChecked(
-            //         tokenAddress,
-            //         !checked
-            //     );
-            // }
-        } else {
-            // const response = await tokenStore.revokeApproval(
-            //     tokenAddress,
-            //     proxyAddress
-            // );
-
-            // Revert change on metamask error
-            // if (response.error) {
-            //     addLiquidityFormStore.setApprovalCheckboxChecked(
-            //         tokenAddress,
-            //         !checked
-            //     );
-            // }
-        }
     };
 
     const handleInputChange = async (event, tokenAddress: string) => {
@@ -326,30 +227,7 @@ const AddAssetTable = observer((props: Props) => {
                         tokenAddress
                     );
 
-                    const checkbox = addLiquidityFormStore.getCheckbox(
-                        tokenAddress
-                    );
                     const input = addLiquidityFormStore.getInput(tokenAddress);
-
-                    let hasMaxApproval = false;
-
-                    if (accountApprovalsLoaded) {
-                        hasMaxApproval = tokenStore.hasMaxApproval(
-                            tokenAddress,
-                            account,
-                            proxyAddress
-                        );
-                    }
-
-                    let visuallyChecked;
-
-                    if (checkbox.touched) {
-                        visuallyChecked = checkbox.checked;
-                    } else if (accountApprovalsLoaded) {
-                        visuallyChecked = hasMaxApproval;
-                    } else {
-                        visuallyChecked = false;
-                    }
 
                     let normalizedUserBalance = '0';
                     let userBalanceToDisplay = '-';
@@ -412,22 +290,6 @@ const AddAssetTable = observer((props: Props) => {
                                 {tokenMetadata.symbol}
                             </TableCell>
                             <TableCell>
-                                <Toggle>
-                                    <ToggleInput
-                                        type="checkbox"
-                                        checked={visuallyChecked}
-                                        disabled={!account}
-                                        onChange={e =>
-                                            handleCheckboxChange(
-                                                e,
-                                                tokenAddress
-                                            )
-                                        }
-                                    />
-                                    <ToggleSlider></ToggleSlider>
-                                </Toggle>
-                            </TableCell>
-                            <TableCell>
                                 {userBalanceToDisplay} {token.symbol}
                             </TableCell>
                             <TableCellRight>
@@ -485,7 +347,6 @@ const AddAssetTable = observer((props: Props) => {
         <Wrapper>
             <HeaderRow>
                 <TableCell>Asset</TableCell>
-                <TableCell>Unlock</TableCell>
                 <TableCell>Wallet Balance</TableCell>
                 <TableCellRight>Deposit Amount</TableCellRight>
             </HeaderRow>
