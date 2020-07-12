@@ -230,6 +230,7 @@ export default class ProviderStore {
         )
 
         // Pass transactions to Gnosis SDK
+        this.safeStatus.gnosisSdk.sendTransactions(encodedTransactions)
 
         return encodedTransactions;
     };
