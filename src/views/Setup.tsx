@@ -65,18 +65,12 @@ const Setup = observer(() => {
         if (isInstanceReady()) {
             history.goBack();
         } else {
-            // const tx = await providerStore.sendTransaction(
-            //     ContractTypes.DSProxyRegistry,
-            //     contractMetadataStore.getDsProxyRegistryAddress(),
-            //     'build',
-            //     []
-            // );
-            // if (tx.error) {
-            //     return;
-            // }
-            // proxyStore.setDeploying(true);
-            // await tx.txResponse.wait(10);
-            // proxyStore.setDeploying(false);
+            providerStore.sendTransaction(
+                ContractTypes.DSProxyRegistry,
+                contractMetadataStore.getDsProxyRegistryAddress(),
+                'build',
+                []
+            );
         }
     };
 
@@ -100,13 +94,6 @@ const Setup = observer(() => {
                             onClick={e => handleButtonClick()}
                         />
                     </ButtonWrapper>
-                    {isDeploying ? (
-                        <Explainer>
-                            Waiting for 10 block confirmations…
-                        </Explainer>
-                    ) : (
-                        <div />
-                    )}
                 </Section>
             </SectionWrapper>
         </SetupWrapper>
