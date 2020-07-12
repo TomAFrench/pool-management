@@ -431,10 +431,7 @@ const AddAssetTable = observer((props: Props) => {
                                 {userBalanceToDisplay} {token.symbol}
                             </TableCell>
                             <TableCellRight>
-                                {addLiquidityFormStore.depositType ===
-                                    DepositType.MULTI_ASSET ||
-                                addLiquidityFormStore.activeToken ===
-                                    tokenAddress ? (
+                                {!inactiveToken ? (
                                     <DepositAmount>
                                         <InputWrapper errorBorders={hasError}>
                                             {userBalances &&
