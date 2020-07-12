@@ -1,6 +1,8 @@
 {
   "short_name": "Pool Management",
   "name": "Balancer Pool Management",
+  "description": "Dashboard for Balancer liquidity providers",
+  "providedBy": {"name": "Balancer Labs", "url": "https://balancer.finance"},
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,6 +20,7 @@
       "sizes": "512x512"
     }
   ],
+  "iconPath": "logo512.png",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
