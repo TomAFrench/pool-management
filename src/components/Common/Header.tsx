@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Wallet from '../Wallet';
 import { Link } from 'react-router-dom';
 
 const HeaderFrame = styled.div`
@@ -34,7 +33,7 @@ const StyledLink = styled(Link)`
     display: flex;
     text-decoration: none;
     align-items: center;
-    cursor: pointer;
+    cursor: default;
     height: 32px;
     img {
         font-size: 15px;
@@ -48,13 +47,10 @@ const Header = () => {
     return (
         <HeaderFrame>
             <HeaderElement>
-                <StyledLink to={`/`}>
+                <StyledLink>
                     <img alt="pebbles" src="pebbles-pad.svg" />
                     <AppName>Balancer</AppName>
                 </StyledLink>
-            </HeaderElement>
-            <HeaderElement>
-                <Wallet />
             </HeaderElement>
         </HeaderFrame>
     );
