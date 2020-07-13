@@ -88,7 +88,7 @@ const AssetOptions = observer(() => {
     const {
         root: {
             providerStore,
-            proxyStore,
+            gnosisStore,
             contractMetadataStore,
             createPoolFormStore,
             tokenStore,
@@ -100,7 +100,7 @@ const AssetOptions = observer(() => {
 
     const tokens = createPoolFormStore.tokens;
     const assetModalInput = createPoolFormStore.assetModal.inputValue;
-    const proxyAddress = proxyStore.getInstanceAddress();
+    const proxyAddress = gnosisStore.getInstanceAddress();
 
     useEffect(() => {
         async function fetchToken() {

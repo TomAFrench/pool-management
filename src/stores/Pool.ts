@@ -364,7 +364,7 @@ export default class PoolStore {
         poolAmountIn: string,
         minAmountsOut: string[]
     ) => {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore } = this.rootStore;
 
         console.debug('exitPool', {
             poolAddress,
@@ -372,12 +372,14 @@ export default class PoolStore {
             minAmountsOut,
         });
 
-        await providerStore.sendTransaction(
-            ContractTypes.BPool,
-            poolAddress,
-            'exitPool',
-            [poolAmountIn, minAmountsOut]
-        );
+        gnosisStore.sendTransaction(
+            gnosisStore.wrapTransaction(
+                poolAddress,
+                ContractTypes.BPool,
+                "exitPool",
+                [poolAmountIn, minAmountsOut]
+            )
+        )
     };
 
     @action exitswapPoolAmountIn = async (
@@ -386,7 +388,7 @@ export default class PoolStore {
         poolAmountIn: string,
         minAmountOut: string
     ) => {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore } = this.rootStore;
 
         console.debug('exitswapPoolAmountIn', {
             poolAddress,
@@ -395,12 +397,14 @@ export default class PoolStore {
             minAmountOut,
         });
 
-        await providerStore.sendTransaction(
-            ContractTypes.BPool,
-            poolAddress,
-            'exitswapPoolAmountIn',
-            [tokenOut, poolAmountIn, minAmountOut]
-        );
+        gnosisStore.sendTransaction(
+            gnosisStore.wrapTransaction(
+                poolAddress,
+                ContractTypes.BPool,
+                "exitswapPoolAmountIn",
+                [tokenOut, poolAmountIn, minAmountOut]
+            )
+        )
     };
 
     @action joinPool = async (
@@ -410,24 +414,22 @@ export default class PoolStore {
     ) => {
         const {
             contractMetadataStore,
-            providerStore,
-            proxyStore,
+            gnosisStore,
         } = this.rootStore;
 
-        const dsProxyAddress = proxyStore.getInstanceAddress();
-        const bActionsAddress = contractMetadataStore.getBActionsAddress();
+        const pool = this.getPool(poolAddress)
+        const approvalTransactions = pool.tokens.map((token, index) => (
+            gnosisStore.wrapTransaction(token.address, ContractTypes.TestToken, "approve",[poolAddress, maxAmountsIn[index]] )
+        ))
 
-        const data = proxyStore.wrapTransaction(
+        const bActionsAddress = contractMetadataStore.getBActionsAddress()
+        const joinPoolTransaction = gnosisStore.wrapTransaction(
+            bActionsAddress,
             ContractTypes.BActions,
-            'joinPool',
+            "joinPool",
             [poolAddress, poolAmountOut.toString(), maxAmountsIn]
-        );
-        return await providerStore.sendTransaction(
-            ContractTypes.DSProxy,
-            dsProxyAddress,
-            'execute',
-            [bActionsAddress, data]
-        );
+        )
+        return gnosisStore.sendTransactions([...approvalTransactions, joinPoolTransaction]);
     };
 
     @action joinswapExternAmountIn = async (
@@ -438,23 +440,19 @@ export default class PoolStore {
     ) => {
         const {
             contractMetadataStore,
-            providerStore,
-            proxyStore,
+            gnosisStore,
         } = this.rootStore;
 
-        const dsProxyAddress = proxyStore.getInstanceAddress();
         const bActionsAddress = contractMetadataStore.getBActionsAddress();
 
-        const data = proxyStore.wrapTransaction(
+        const approvalTransaction = gnosisStore.wrapTransaction(tokenIn, ContractTypes.TestToken, "approve",[poolAddress, tokenAmountIn])
+
+        const joinPoolTransaction = gnosisStore.wrapTransaction(
+            bActionsAddress,
             ContractTypes.BActions,
-            'joinswapExternAmountIn',
+            "joinswapExternAmountIn",
             [poolAddress, tokenIn, tokenAmountIn, minPoolAmountOut]
-        );
-        return await providerStore.sendTransaction(
-            ContractTypes.DSProxy,
-            dsProxyAddress,
-            'execute',
-            [bActionsAddress, data]
-        );
+        )
+        return gnosisStore.sendTransactions([approvalTransaction, joinPoolTransaction]);
     };
 }

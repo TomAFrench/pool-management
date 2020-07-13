@@ -2,7 +2,6 @@ import { action, observable, ObservableMap } from 'mobx';
 import RootStore from 'stores/Root';
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import initSdk, { SdkInstance, SafeInfo } from "@gnosis.pm/safe-apps-sdk";
 import { backupUrls, supportedChainId } from 'provider/connectors';
 import { Interface } from '@ethersproject/abi';
 
@@ -62,56 +61,24 @@ export interface ProviderStatus {
     activeProvider: any;
 }
 
-export interface SafeStatus {
-    safeInfo: SafeInfo,
-    gnosisSdk: SdkInstance
-}
-
-type Transaction = {
-    data: string,
-    to: string,
-    value: number
-}
-
-type FunctionCall = {
-    contractType: ContractTypes,
-    contractAddress: string,
-    action: string,
-    params: any[],
-    overrides?: any
-}
-
 export default class ProviderStore {
     @observable chainData: ChainData;
     @observable providerStatus: ProviderStatus;
-    safeStatus: SafeStatus;
     rootStore: RootStore;
 
     constructor(rootStore) {
         this.rootStore = rootStore;
         this.chainData = { currentBlockNumber: -1 } as ChainData;
         this.providerStatus = {} as ProviderStatus;
-        this.safeStatus = {} as SafeStatus;
         this.providerStatus.active = false;
         this.providerStatus.injectedLoaded = false;
         this.providerStatus.injectedActive = false;
         this.providerStatus.backUpLoaded = false;
         this.providerStatus.activeProvider = null;
-        this.safeStatus.gnosisSdk = initSdk()
 
         this.handleNetworkChanged = this.handleNetworkChanged.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
-        this.setSafeInfo = this.setSafeInfo.bind(this)
-
-        this.safeStatus.gnosisSdk.addListeners({
-            onSafeInfo: this.setSafeInfo,
-        });
-    }
-
-    setSafeInfo(safeInfo: SafeInfo):void {
-        console.log("Setting account to ", safeInfo.safeAddress)
-        this.safeStatus.safeInfo = safeInfo;
     }
 
     getCurrentBlockNumber(): number {
@@ -146,91 +113,13 @@ export default class ProviderStore {
             });
     };
 
-    // account is optional
-    getProviderOrSigner(library, account) {
-        console.debug('[getProviderOrSigner', {
-            library,
-            account,
-            signer: library.getSigner(account),
-        });
-
-        return account
-            ? library.getSigner(account).connectUnchecked()
-            : library;
-    }
-
     getContract(
         type: ContractTypes,
         address: string,
-        signerAccount?: string
     ): Contract {
         const library = this.providerStatus.library;
-
-        if (signerAccount) {
-            return new Contract(
-                address,
-                schema[type],
-                this.getProviderOrSigner(
-                    this.providerStatus.library,
-                    signerAccount
-                )
-            );
-        }
-
         return new Contract(address, schema[type], library);
     }
-
-    encodeTransaction = (
-        contractType: ContractTypes,
-        contractAddress: string,
-        action: string,
-        params: any[],
-        overrides?: any
-    ): Transaction => {
-        const chainId = this.providerStatus.activeChainId;
-        const account = this.providerStatus.account;
-
-        overrides = overrides ? overrides : {};
-
-        if (!account) {
-            throw new Error(ERRORS.BlockchainActionNoAccount);
-        }
-
-        if (!chainId) {
-            throw new Error(ERRORS.BlockchainActionNoChainId);
-        }
-
-        const contractInterface = new Interface(schema[contractType])
-        const transaction = {
-            data: contractInterface.encodeFunctionData(action, params),
-            to: contractAddress,
-            value: 0
-        }
-
-        return transaction;
-    };
-
-    @action sendTransaction = (
-        contractType: ContractTypes,
-        contractAddress: string,
-        action: string,
-        params: any[],
-        overrides?: any
-    ): Transaction[] => this.sendTransactions([{contractType, contractAddress, action, params, overrides}])
-
-    @action sendTransactions = (
-        transactions: FunctionCall[]
-    ): Transaction[] => {
-        const encodedTransactions = transactions.map(
-            ({contractType, contractAddress, action, params, overrides}) =>
-                this.encodeTransaction(contractType, contractAddress, action, params, overrides)
-        )
-
-        // Pass transactions to Gnosis SDK
-        this.safeStatus.gnosisSdk.sendTransactions(encodedTransactions)
-
-        return encodedTransactions;
-    };
 
     @action async handleNetworkChanged(
         networkId: string | number
@@ -353,7 +242,7 @@ export default class ProviderStore {
             let network = await web3.getNetwork();
             this.providerStatus.injectedActive = false;
             this.providerStatus.backUpLoaded = true;
-            this.providerStatus.account = this.safeStatus.safeInfo.safeAddress;
+            this.providerStatus.account = this.rootStore.gnosisStore.safeAddress;
             this.providerStatus.activeChainId = network.chainId;
             this.providerStatus.backUpWeb3 = web3;
             this.providerStatus.library = web3;

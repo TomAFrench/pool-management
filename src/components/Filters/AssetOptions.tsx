@@ -87,7 +87,7 @@ interface Asset {
 
 const AssetOptions = observer((props: RouteComponentProps) => {
     const {
-        root: { providerStore, proxyStore, contractMetadataStore, tokenStore },
+        root: { gnosisStore, providerStore, contractMetadataStore, tokenStore },
     } = useStores();
 
     const account = providerStore.providerStatus.account;
@@ -95,7 +95,7 @@ const AssetOptions = observer((props: RouteComponentProps) => {
 
     const tokens = props.selectedAssets;
     const assetModalInput = props.search;
-    const proxyAddress = proxyStore.getInstanceAddress();
+    const proxyAddress = gnosisStore.getInstanceAddress();
 
     useEffect(() => {
         async function fetchToken() {

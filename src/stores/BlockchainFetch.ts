@@ -1,7 +1,6 @@
 import { action, observable } from 'mobx';
 import RootStore from 'stores/Root';
 import { supportedChainId } from '../provider/connectors';
-import { EtherKey } from './Token';
 
 export default class BlockchainFetchStore {
     @observable activeFetchLoop: any;
@@ -40,28 +39,6 @@ export default class BlockchainFetchStore {
         tokenStore.fetchTokenBalances(account, poolAddresses);
     }
 
-    @action async fetchProxyData() {
-        const {
-            tokenStore,
-            proxyStore,
-            providerStore,
-            contractMetadataStore,
-        } = this.rootStore;
-
-        const account = providerStore.providerStatus.account;
-        await proxyStore.fetchInstance(account);
-
-        if (!proxyStore.hasInstance()) {
-            return;
-        }
-        const trackedTokenAddresses = contractMetadataStore.getTrackedTokenAddresses();
-        const addresses = trackedTokenAddresses.filter(
-            address => address !== EtherKey
-        );
-        const proxyAddress = proxyStore.getInstanceAddress();
-        tokenStore.fetchAccountApprovals(addresses, account, proxyAddress);
-    }
-
     @action async fetchActivePoolAllowances() {
         const { providerStore } = this.rootStore;
 
@@ -91,10 +68,6 @@ export default class BlockchainFetchStore {
                 .getBlockNumber()
                 .then(blockNumber => {
                     const lastCheckedBlock = providerStore.getCurrentBlockNumber();
-
-                    if (account) {
-                        this.fetchProxyData();
-                    }
 
                     const doFetch =
                         blockNumber >= lastCheckedBlock + 10 || forceFetch;

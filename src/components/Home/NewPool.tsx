@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react';
 import { bnum, toWei } from 'utils/helpers';
-import { ContractTypes } from '../../stores/Provider';
 import { EtherKey } from '../../stores/Token';
 import { ValidationStatus } from '../../stores/actions/validators';
 import { useStores } from '../../contexts/storesContext';
@@ -11,6 +10,7 @@ import SelectAssetModal from '../CreatePool/SelectAssetModal';
 import Button from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
 import { BigNumber } from 'utils/bignumber';
+import { ContractTypes } from 'stores/Provider';
 
 const Wrapper = styled.div`
     padding-top: 8px;
@@ -136,8 +136,8 @@ const NewPool = observer(() => {
         root: {
             contractMetadataStore,
             createPoolFormStore,
+            gnosisStore,
             providerStore,
-            proxyStore,
             tokenStore,
         },
     } = useStores();
@@ -166,7 +166,6 @@ const NewPool = observer(() => {
     };
 
     const handleCreateButtonClick = async () => {
-        const dsProxyAddress = proxyStore.getInstanceAddress();
         const bActions = contractMetadataStore.getBActionsAddress();
         const factory = contractMetadataStore.getBFactoryAddress();
         const tokens = createPoolFormStore.tokens;
@@ -189,17 +188,19 @@ const NewPool = observer(() => {
             .div(100)
             .toString();
         const finalize = true;
-        const data = proxyStore.wrapTransaction(
+
+        const approvalTransactions = tokens.map((token, index) => (
+            gnosisStore.wrapTransaction(token, ContractTypes.TestToken, "approve", [bActions, balances[index]] )
+        ))
+
+        const createTransaction = gnosisStore.wrapTransaction(
+            bActions,
             ContractTypes.BActions,
-            'create',
+            "create",
             [factory, tokens, balances, denorms, swapFee, finalize]
-        );
-        await providerStore.sendTransaction(
-            ContractTypes.DSProxy,
-            dsProxyAddress,
-            'execute',
-            [bActions, data]
-        );
+        )
+
+        gnosisStore.sendTransactions([...approvalTransactions, createTransaction])
     };
 
     const handleInputChange = async event => {
