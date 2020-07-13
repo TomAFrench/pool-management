@@ -1,46 +1,46 @@
 :root {
     /* General Styles */
-    --background: #21222c;
+    --background: #ffffff;
     --body-text: #90a4ae;
     --exit-modal-color: #dfe3e9;
     --error: #ff8a80;
     --header-text: #ffffff;
     --app-header-text: #fafafa;
-    --link-text: #82b1ff;
+    --link-text: #008c73;
     --token-balance-text: #90a4ae;
     --warning: #ffc780;
     --address-color: #82b1ff;
 
     /* Input Fields */
-    --input-text: #fafafa;
+    --input-text: #000000;
     --input-placeholder-text: #575860;
-    --input-hover-background: #31313b;
+    --input-hover-background: #f7f5f5;
     --input-hover-placeholder-text: #818187;
     --input-hover-border: #4c5480;
 
     /* Button Styles */
-    --primary-button-background: #536dfe;
-    --primary-button-background-hover: #455ff5;
-    --primary-button-border: #3d5afe;
+    --primary-button-background: #008c73;
+    --primary-button-background-hover: #005546;
+    --primary-button-border: #008c73;
     --primary-button-text: #ffffff;
-    --secondary-button-background: #2e2f39;
-    --secondary-button-background-hover: #31313b;
-    --secondary-button-border: #41476b;
+    --secondary-button-background: #008c73;
+    --secondary-button-background-hover: #005546;
+    --secondary-button-border: #008c73;
     --secondary-button-text: #ffffff;
     --disabled-button: #414249;
     --disabled-button-text: #c5c5c5;
 
     /* Panel Styles */
-    --panel-border: #41476b;
-    --panel-background: #282932;
-    --panel-header-background: #282932;
-    --panel-row-text: #fafafa;
+    --panel-border: #d0d0d0;
+    --panel-background: #ffffff;
+    --panel-header-background: #fafafa;
+    --panel-row-text: #000000;
 
     /* Selector Styles */
     --slider-main: #8c9eff;
-    --highlighted-selector-background: #41476b;
-    --highlighted-selector-border: #7785d5;
-    --highlighted-selector-text: #ffffff;
+    --highlighted-selector-background: #f7f5f5;
+    --highlighted-selector-border: #008c73;
+    --highlighted-selector-text: #000000;
     --selector-background: #2e2f39;
 }
 
