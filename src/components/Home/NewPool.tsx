@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react';
-import { useHistory } from 'react-router-dom';
 import { bnum, toWei } from 'utils/helpers';
 import { ContractTypes } from '../../stores/Provider';
 import { EtherKey } from '../../stores/Token';
@@ -144,9 +143,6 @@ const NewPool = observer(() => {
     } = useStores();
 
     const account = providerStore.providerStatus.account;
-    const history = useHistory();
-    const hasProxyInstance = proxyStore.hasInstance();
-    const proxyAddress = proxyStore.getInstanceAddress();
 
     const feeInput = createPoolFormStore.fee;
     const hasFeeError = feeInput.validation === ValidationStatus.BAD_FEE;
@@ -157,12 +153,6 @@ const NewPool = observer(() => {
     const validationStatus = createPoolFormStore.validationStatus;
 
     const tokens = createPoolFormStore.tokens;
-
-    useEffect(() => {
-        if (!hasProxyInstance) {
-            history.push('/setup');
-        }
-    }, [hasProxyInstance, history]);
 
     const handleAddButtonClick = async () => {
         const trackedTokenAddresses = contractMetadataStore.getTrackedTokenAddresses();
