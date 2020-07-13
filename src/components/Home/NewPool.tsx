@@ -133,15 +133,6 @@ const CheckboxWrapper = styled.div`
 const Content = styled.div``;
 
 const NewPool = observer(() => {
-    const findLockedToken = (
-        tokens: string[],
-        account: string
-    ): string | undefined => {
-        return tokens.find(token => {
-            return !tokenStore.hasMaxApproval(token, account, proxyAddress);
-        });
-    };
-
     const {
         root: {
             contractMetadataStore,
@@ -166,17 +157,6 @@ const NewPool = observer(() => {
     const validationStatus = createPoolFormStore.validationStatus;
 
     const tokens = createPoolFormStore.tokens;
-    let lockedToken;
-    if (account) {
-        const accountApprovalsLoaded = tokenStore.areAccountApprovalsLoaded(
-            tokens,
-            account,
-            proxyAddress
-        );
-        if (accountApprovalsLoaded) {
-            lockedToken = findLockedToken(tokens, account);
-        }
-    }
 
     useEffect(() => {
         if (!hasProxyInstance) {
@@ -232,10 +212,6 @@ const NewPool = observer(() => {
         );
     };
 
-    const handleUnlockButtonClick = async () => {
-        // await tokenStore.approveMax(lockedToken, proxyAddress);
-    };
-
     const handleInputChange = async event => {
         const { value } = event.target;
         createPoolFormStore.setFee(value);
@@ -258,18 +234,6 @@ const NewPool = observer(() => {
                 isActive={account && hasValidInput && hasConfirmed}
                 isPrimary={true}
                 onClick={e => handleCreateButtonClick()}
-            />
-        );
-    };
-
-    const renderUnlockButton = () => {
-        const token = contractMetadataStore.getTokenMetadata(lockedToken);
-        return (
-            <Button
-                text={`Unlock ${token.symbol}`}
-                isActive={account && lockedToken}
-                isPrimary={true}
-                onClick={e => handleUnlockButtonClick()}
             />
         );
     };
@@ -403,7 +367,7 @@ const NewPool = observer(() => {
 
             <Section>
                 <SingleElement>
-                    {lockedToken ? renderUnlockButton() : renderCreateButton()}
+                    {renderCreateButton()}
                 </SingleElement>
             </Section>
             <SelectAssetModal />

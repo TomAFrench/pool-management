@@ -77,62 +77,6 @@ const DepositAmount = styled.div`
     border-radius: 4px;
 `;
 
-const Toggle = styled.label`
-    position: relative;
-    display: inline-block;
-    width: 42px;
-    height: 24px;
-    input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-`;
-
-const ToggleInput = styled.input`
-    &:checked + span {
-        background-color: var(--highlighted-selector-background);
-    }
-    &:checked + span:before {
-        -webkit-transform: translateX(18px);
-        -ms-transform: translateX(18px);
-        transform: translateX(18px);
-        background-color: var(--slider-main);
-        background-image: url('Checkbox.svg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 14px 14px;
-    }
-    &:focus + span {
-        box-shadow: 0 0 1px #2196f3;
-    }
-`;
-
-const ToggleSlider = styled.span`
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--highlighted-selector-background);
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-    border-radius: 18px;
-    :before {
-        position: absolute;
-        content: '';
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: var(--input-text);
-        -webkit-transition: 0.4s;
-        transition: 0.4s;
-        border-radius: 50%;
-    }
-`;
-
 const InputWrapper = styled.div`
     height: 30px;
     padding: 0px 17px;
@@ -223,9 +167,7 @@ const CloseIcon = styled(ExternalIcon)`
 const CreatePoolTable = observer(() => {
     const {
         root: {
-            tokenStore,
             providerStore,
-            proxyStore,
             marketStore,
             contractMetadataStore,
             createPoolFormStore,
@@ -234,50 +176,7 @@ const CreatePoolTable = observer(() => {
 
     const account = providerStore.providerStatus.account;
 
-    let accountApprovalsLoaded = false;
     const tokens = createPoolFormStore.tokens;
-    const proxyAddress = proxyStore.getInstanceAddress();
-
-    accountApprovalsLoaded = tokenStore.areAccountApprovalsLoaded(
-        tokens,
-        account,
-        proxyAddress
-    );
-
-    const handleCheckboxChange = async (event, tokenAddress: string) => {
-        const { checked } = event.target;
-
-        createPoolFormStore.setApprovalCheckboxTouched(tokenAddress, true);
-        createPoolFormStore.setApprovalCheckboxChecked(tokenAddress, checked);
-
-        if (checked) {
-            // const response = await tokenStore.approveMax(
-            //     tokenAddress,
-            //     proxyAddress
-            // );
-
-            // // Revert change on metamask error
-            // if (response.error) {
-            //     createPoolFormStore.setApprovalCheckboxChecked(
-            //         tokenAddress,
-            //         !checked
-            //     );
-            // }
-        } else {
-            // const response = await tokenStore.revokeApproval(
-            //     tokenAddress,
-            //     proxyAddress
-            // );
-
-            // // Revert change on metamask error
-            // if (response.error) {
-            //     createPoolFormStore.setApprovalCheckboxChecked(
-            //         tokenAddress,
-            //         !checked
-            //     );
-            // }
-        }
-    };
 
     const handleWeightInputChange = async (event, tokenAddress: string) => {
         const { value } = event.target;
@@ -331,33 +230,12 @@ const CreatePoolTable = observer(() => {
                         token
                     );
 
-                    const checkbox = createPoolFormStore.getCheckbox(token);
                     const weightInput = createPoolFormStore.getWeightInput(
                         token
                     );
                     const amountInput = createPoolFormStore.getAmountInput(
                         token
                     );
-
-                    let hasMaxApproval = false;
-
-                    if (accountApprovalsLoaded) {
-                        hasMaxApproval = tokenStore.hasMaxApproval(
-                            token,
-                            account,
-                            proxyAddress
-                        );
-                    }
-
-                    let visuallyChecked;
-
-                    if (checkbox.touched) {
-                        visuallyChecked = checkbox.checked;
-                    } else if (accountApprovalsLoaded) {
-                        visuallyChecked = hasMaxApproval;
-                    } else {
-                        visuallyChecked = false;
-                    }
 
                     const valueText = tokenValues[token].isNaN()
                         ? '-'
@@ -387,19 +265,6 @@ const CreatePoolTable = observer(() => {
                                         handleChangeClick(token);
                                     }}
                                 />
-                            </TableCell>
-                            <TableCell>
-                                <Toggle>
-                                    <ToggleInput
-                                        type="checkbox"
-                                        checked={visuallyChecked}
-                                        disabled={!account}
-                                        onChange={e =>
-                                            handleCheckboxChange(e, token)
-                                        }
-                                    />
-                                    <ToggleSlider></ToggleSlider>
-                                </Toggle>
                             </TableCell>
                             <TableCellRight width={'20%'}>
                                 <WeightAmount>
@@ -440,7 +305,7 @@ const CreatePoolTable = observer(() => {
                                     </InputWrapper>
                                 </DepositAmount>
                             </TableCellRight>
-                            <TableCellRight width={'15%'}>
+                            <TableCellRight width={'25%'}>
                                 <ValueLabel>{valueText}</ValueLabel>
                             </TableCellRight>
                             <TableCellRight>
@@ -463,12 +328,11 @@ const CreatePoolTable = observer(() => {
         <Wrapper>
             <HeaderRow>
                 <TableCell width={'15%'}>Asset</TableCell>
-                <TableCell>Unlock</TableCell>
                 <TableCellRight width={'30%'}>
                     Weight (total max: 100)
                 </TableCellRight>
                 <TableCellRight width={'20%'}>Amount</TableCellRight>
-                <TableCellRight width={'15%'}>Value</TableCellRight>
+                <TableCellRight width={'25%'}>Value</TableCellRight>
                 <TableCellRight>Remove</TableCellRight>
             </HeaderRow>
             {renderAssetTable(tokens)}
