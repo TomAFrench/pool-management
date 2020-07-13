@@ -27,8 +27,8 @@
     --secondary-button-background-hover: #005546;
     --secondary-button-border: #008c73;
     --secondary-button-text: #ffffff;
-    --disabled-button: #414249;
-    --disabled-button-text: #c5c5c5;
+    --disabled-button: #008c7380;
+    --disabled-button-text: #ffffff;
 
     /* Panel Styles */
     --panel-border: #d0d0d0;
