@@ -27,7 +27,7 @@ const Input = styled.input`
 
     &:enabled:checked + div div {
         background: #ffffff;
-        border: 4px solid #8c9eff;
+        border: 4px solid #008c73;
     }
 
     &:enabled:not(:checked) + div div {
