@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TokenIconAddress } from '../Common/WalletBalances';
 import { observer } from 'mobx-react';
 import { useStores } from '../../contexts/storesContext';
 import { BigNumber } from 'utils/bignumber';
@@ -11,6 +10,8 @@ import {
     formatCurrency,
     getEtherscanLink,
 } from '../../utils/helpers';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
+
 
 const Wrapper = styled.div`
     width: 100%;

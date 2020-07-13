@@ -9,7 +9,6 @@ import Pool from 'views/Pool';
 import New from 'views/New';
 import Setup from 'views/Setup';
 import LeftNav from 'components/Common/LeftNav';
-import WalletBalances from 'components/Common/WalletBalances';
 
 const Container = styled.div`
     display: flex;
@@ -49,7 +48,6 @@ const App = () => {
                 <Container>
                     <LeftContainer>
                         <LeftNav />
-                        <WalletBalances />
                     </LeftContainer>
                     {renderViews()}
                 </Container>

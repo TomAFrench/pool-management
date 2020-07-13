@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TokenIconAddress } from '../Common/WalletBalances';
 import RadioButton from '../Common/RadioButton';
 import { observer } from 'mobx-react';
 import { useStores } from '../../contexts/storesContext';
 import { BigNumberMap, Pool } from '../../types';
 import { formatBalanceTruncated } from '../../utils/helpers';
 import { BigNumber } from '../../utils/bignumber';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
 import { DepositType } from '../../stores/AddLiquidityForm';
 import { ValidationStatus } from '../../stores/actions/validators';
 

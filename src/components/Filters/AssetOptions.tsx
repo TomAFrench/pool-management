@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import { useStores } from '../../contexts/storesContext';
-import { TokenIconAddress } from '../Common/WalletBalances';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
 import {
     bnum,
     formatBalanceTruncated,

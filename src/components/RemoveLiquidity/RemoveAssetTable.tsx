@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TokenIconAddress } from '../Common/WalletBalances';
 import RadioButton from '../Common/RadioButton';
 import { DepositType } from '../../stores/RemoveLiquidityForm';
 import { ValidationStatus } from '../../stores/actions/validators';
@@ -14,6 +13,7 @@ import {
     fromPercentage,
     bnum,
 } from '../../utils/helpers';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
 
 const Wrapper = styled.div`
     width: calc(80% - 20px);

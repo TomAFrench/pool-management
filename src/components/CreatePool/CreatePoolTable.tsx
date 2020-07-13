@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TokenIconAddress } from '../Common/WalletBalances';
 import { observer } from 'mobx-react';
 import { useStores } from '../../contexts/storesContext';
 import { bnum, formatCurrency, formatPercentage } from '../../utils/helpers';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
 import { ValidationStatus } from '../../stores/actions/validators';
 const Cross = require('../../assets/images/x.svg') as string;
 const Dropdown = require('../../assets/images/dropdown.svg') as string;

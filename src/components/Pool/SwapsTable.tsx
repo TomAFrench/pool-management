@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react';
 import { padToDecimalPlaces } from '../../utils/helpers';
 import { getEtherscanLink } from '../../utils/helpers';
+import { TokenIconAddress } from '../../utils/tokenIconAddress';
 import { useStores } from '../../contexts/storesContext';
-import { TokenIconAddress } from '../Common/WalletBalances';
 import { getAddress } from '@ethersproject/address';
 const ExternalLink = require('../../assets/images/external-link.svg') as string;
 
