@@ -7,30 +7,23 @@ import Home from 'views/Home';
 import Private from 'views/Private';
 import Pool from 'views/Pool';
 import New from 'views/New';
-import LeftNav from 'components/Common/LeftNav';
+import NavToggle from 'components/Common/NavToggle';
+import Shared from 'views/Shared';
 
 const Container = styled.div`
     display: flex;
     flex-direction: row;
 `;
 
-const LeftContainer = styled.div`
-    @media screen and (max-width: 1024px) {
-        display: none;
-    }
-    flex-direction: column;
-    width: 300px;
-    border-right: 1px solid var(--panel-border);
-    background-color: var(--panel-background);
-`;
-
 const App = () => {
     const renderViews = () => {
         return (
             <div className="app-shell">
+                <NavToggle/>
                 <Switch>
                     <Route path="/pool/new" component={New} />
                     <Route path="/pool/:poolAddress" component={Pool} />
+                    <Route path="/public" component={Shared} />
                     <Route path="/private" component={Private} />
                     <Redirect from="/list" to="/" />
                     <Route path="/" component={Home} />
@@ -42,11 +35,7 @@ const App = () => {
     return (
         <Web3Manager>
             <HashRouter>
-                {/* <Header /> */}
                 <Container>
-                    <LeftContainer>
-                        <LeftNav />
-                    </LeftContainer>
                     {renderViews()}
                 </Container>
             </HashRouter>

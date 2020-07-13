@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import MyLiquidity from '../components/Home/MyLiquidity';
+import SharedPools from '../components/Home/SharedPools';
 
-const HomeWrapper = styled.div`
+const SharedWrapper = styled.div`
     position: relative;
     padding: 32px 30px 0px 30px;
 
@@ -11,12 +11,12 @@ const HomeWrapper = styled.div`
     }
 `;
 
-const Home = () => {
+const Shared = () => {
     return (
-        <HomeWrapper>
-            <MyLiquidity />
-        </HomeWrapper>
+        <SharedWrapper>
+            <SharedPools />
+        </SharedWrapper>
     );
 };
 
-export default Home;
+export default Shared;

@@ -29,7 +29,7 @@ const STab = styled(Tab)`
     &.react-tabs__tab--selected {
         background: var(--highlighted-selector-background);
         border-color: var(--panel-border);
-        color: var(--header-text);
+        color: var(--primary-button-text);
         border-radius: 4px 4px 0 0;
     }
     &.react-tabs__tab--disabled {
