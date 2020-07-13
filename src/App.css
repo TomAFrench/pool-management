@@ -33,6 +33,7 @@
     /* Panel Styles */
     --panel-border: #d0d0d0;
     --panel-background: #ffffff;
+    --panel-background-hover: #fff3e2;
     --panel-header-background: #fafafa;
     --panel-row-text: #000000;
 

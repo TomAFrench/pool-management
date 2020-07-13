@@ -52,7 +52,7 @@ const PoolRow = styled.div`
     }
 
     &:hover {
-        background: var(--panel-border);
+        background: var(--panel-background-hover);
     }
 `;
 
