@@ -186,15 +186,15 @@ const RemoveLiquidityModal = observer((props: Props) => {
     const { poolAddress } = props;
     const {
         root: {
+            gnosisStore,
             poolStore,
             tokenStore,
-            providerStore,
             contractMetadataStore,
             removeLiquidityFormStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const pool = poolStore.getPool(poolAddress);
 

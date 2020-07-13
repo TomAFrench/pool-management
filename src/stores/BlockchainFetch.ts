@@ -11,11 +11,11 @@ export default class BlockchainFetchStore {
     }
 
     @action onActivePoolChanged() {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore, providerStore } = this.rootStore;
 
         if (
             providerStore.providerStatus.active &&
-            providerStore.providerStatus.account &&
+            gnosisStore.safeAddress &&
             providerStore.providerStatus.activeChainId === supportedChainId
         ) {
             this.fetchActivePoolAllowances();
@@ -31,8 +31,8 @@ export default class BlockchainFetchStore {
     }
 
     @action fetchPoolUserBalances() {
-        const { tokenStore, poolStore, providerStore } = this.rootStore;
-        const account = providerStore.providerStatus.account;
+        const { gnosisStore, tokenStore, poolStore } = this.rootStore;
+        const account = gnosisStore.safeAddress;
         const poolAddresses = poolStore
             .getContributedPools()
             .map(pool => pool.address);
@@ -40,9 +40,9 @@ export default class BlockchainFetchStore {
     }
 
     @action async fetchActivePoolAllowances() {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore } = this.rootStore;
 
-        const account = providerStore.providerStatus.account;
+        const account = gnosisStore.safeAddress;
         const { appSettingsStore, poolStore, tokenStore } = this.rootStore;
         const poolAddress = appSettingsStore.getActivePoolAddress();
         const tokenAddresses = poolStore.getPoolTokens(poolAddress);
@@ -54,12 +54,12 @@ export default class BlockchainFetchStore {
     }
 
     @action setFetchLoop(forceFetch?: boolean) {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore, providerStore } = this.rootStore;
 
         const active = providerStore.providerStatus.active;
         const chainId = providerStore.providerStatus.activeChainId;
         const library = providerStore.providerStatus.library;
-        const account = providerStore.providerStatus.account;
+        const account = gnosisStore.safeAddress;
 
         if (active && chainId === supportedChainId) {
             const { poolStore, appSettingsStore } = this.rootStore;

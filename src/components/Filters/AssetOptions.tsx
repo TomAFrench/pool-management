@@ -90,7 +90,7 @@ const AssetOptions = observer((props: RouteComponentProps) => {
         root: { gnosisStore, providerStore, contractMetadataStore, tokenStore },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
     const chainId = providerStore.providerStatus.activeChainId;
 
     const tokens = props.selectedAssets;

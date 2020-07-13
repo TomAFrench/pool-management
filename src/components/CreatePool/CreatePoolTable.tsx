@@ -167,14 +167,14 @@ const CloseIcon = styled(ExternalIcon)`
 const CreatePoolTable = observer(() => {
     const {
         root: {
-            providerStore,
+            gnosisStore,
             marketStore,
             contractMetadataStore,
             createPoolFormStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const tokens = createPoolFormStore.tokens;
 

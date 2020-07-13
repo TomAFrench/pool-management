@@ -31,9 +31,9 @@ const CreateLink = styled(Link)`
 
 const MyLiquidity = observer(() => {
     const {
-        root: { poolStore, providerStore },
+        root: { gnosisStore, poolStore },
     } = useStores();
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const contributedPools = poolStore.getContributedPools();
     const pools = contributedPools.filter(pool => {

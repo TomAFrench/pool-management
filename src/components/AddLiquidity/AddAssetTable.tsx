@@ -157,15 +157,15 @@ const AddAssetTable = observer((props: Props) => {
 
     const {
         root: {
+            gnosisStore,
             poolStore,
             tokenStore,
-            providerStore,
             contractMetadataStore,
             addLiquidityFormStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const pool = poolStore.getPool(poolAddress);
     let userBalances: undefined | BigNumberMap;

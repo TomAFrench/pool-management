@@ -176,15 +176,15 @@ const RemoveAssetsTable = observer((props: Props) => {
 
     const {
         root: {
+            gnosisStore,
             poolStore,
             tokenStore,
-            providerStore,
             contractMetadataStore,
             removeLiquidityFormStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const input = removeLiquidityFormStore.shareToWithdraw;
     const hasError =

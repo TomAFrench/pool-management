@@ -102,6 +102,7 @@ const BalancesTable = observer((props: Props) => {
 
     const {
         root: {
+            gnosisStore,
             poolStore,
             tokenStore,
             providerStore,
@@ -110,7 +111,7 @@ const BalancesTable = observer((props: Props) => {
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
     const chainId = providerStore.providerStatus.activeChainId;
 
     const pool = poolStore.getPool(poolAddress);

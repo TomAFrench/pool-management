@@ -125,8 +125,8 @@ const PoolView = observer((props: RouteComponentProps) => {
     const poolAddress = toChecksum(props.match.params.poolAddress);
     const {
         root: {
+            gnosisStore,
             poolStore,
-            providerStore,
             marketStore,
             appSettingsStore,
             blockchainFetchStore,
@@ -139,7 +139,7 @@ const PoolView = observer((props: RouteComponentProps) => {
     } = useStores();
 
     const pool = poolStore.getPool(poolAddress);
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const [warningModalOpen, setWarningModalOpen] = useState(true);
 

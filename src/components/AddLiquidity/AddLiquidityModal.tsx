@@ -324,9 +324,9 @@ const AddLiquidityModal = observer((props: Props) => {
     const { poolAddress } = props;
     const {
         root: {
+            gnosisStore,
             poolStore,
             tokenStore,
-            providerStore,
             addLiquidityFormStore,
             contractMetadataStore,
         },
@@ -342,7 +342,7 @@ const AddLiquidityModal = observer((props: Props) => {
         }
     }, [hasProxyInstance, addLiquidityFormStore, history]);
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const pool = poolStore.getPool(poolAddress);
 

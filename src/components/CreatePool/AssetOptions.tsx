@@ -87,15 +87,15 @@ interface Asset {
 const AssetOptions = observer(() => {
     const {
         root: {
-            providerStore,
             gnosisStore,
+            providerStore,
             contractMetadataStore,
             createPoolFormStore,
             tokenStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
     const chainId = providerStore.providerStatus.activeChainId;
 
     const tokens = createPoolFormStore.tokens;

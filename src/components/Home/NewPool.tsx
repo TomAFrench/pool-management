@@ -137,12 +137,11 @@ const NewPool = observer(() => {
             contractMetadataStore,
             createPoolFormStore,
             gnosisStore,
-            providerStore,
             tokenStore,
         },
     } = useStores();
 
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const feeInput = createPoolFormStore.fee;
     const hasFeeError = feeInput.validation === ValidationStatus.BAD_FEE;

@@ -44,10 +44,10 @@ export default class PoolStore {
     @action processUnknownTokens(pool: Pool) {
         const {
             contractMetadataStore,
+            gnosisStore,
             tokenStore,
-            providerStore,
         } = this.rootStore;
-        const account = providerStore.providerStatus.account;
+        const account = gnosisStore.safeAddress;
         const defaultPrecision = contractMetadataStore.getDefaultPrecision();
 
         pool.tokens.forEach((token, index) => {
@@ -112,10 +112,10 @@ export default class PoolStore {
     }
 
     @action async fetchContributedPools() {
-        const { providerStore } = this.rootStore;
+        const { gnosisStore, providerStore } = this.rootStore;
         // The subgraph and local block could be out of sync
         const currentBlock = providerStore.getCurrentBlockNumber();
-        const account = providerStore.providerStatus.account;
+        const account = gnosisStore.safeAddress;
 
         if (!account) {
             return;

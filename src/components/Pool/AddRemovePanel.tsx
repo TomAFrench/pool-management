@@ -71,13 +71,14 @@ const AddRemovePanel = (props: Props) => {
     const { poolAddress } = props;
     const {
         root: {
+            gnosisStore,
             providerStore,
             addLiquidityFormStore,
             removeLiquidityFormStore,
             poolStore,
         },
     } = useStores();
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
     const chainId = providerStore.providerStatus.activeChainId;
 
     const pool = poolStore.getPool(poolAddress);

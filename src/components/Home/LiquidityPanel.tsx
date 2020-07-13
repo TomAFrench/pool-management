@@ -157,10 +157,10 @@ enum Messages {
 
 const LiquidityPanel = observer((props: Props) => {
     const {
-        root: { poolStore, providerStore, marketStore, contractMetadataStore },
+        root: { gnosisStore, poolStore, marketStore, contractMetadataStore },
     } = useStores();
     const { pools, dataSource } = props;
-    const account = providerStore.providerStatus.account;
+    const account = gnosisStore.safeAddress;
 
     const options = {
         animation: {
