@@ -23,12 +23,12 @@ const StyledLink = styled(NavLink)`
     font-size: 14px;
     line-height: 22px;
     text-decoration: none;
-    color: var(--highlighted-selector-text);
+    color: var(--highlighted-nav-text);
     padding-left: 27px;
 
     &.selected {
-        background-color: var(--highlighted-selector-background);
-        border-left: 3px solid var(--highlighted-selector-border);
+        background-color: var(--highlighted-nav-background);
+        border-left: 3px solid var(--highlighted-nav-border);
     }
 `;
 

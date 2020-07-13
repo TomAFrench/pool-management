@@ -42,6 +42,11 @@
     --highlighted-selector-border: #008c73;
     --highlighted-selector-text: #000000;
     --selector-background: #2e2f39;
+
+    /* Nav Styles */
+    --highlighted-nav-background: #f7f5f5;
+    --highlighted-nav-border: #008c73;
+    --highlighted-nav-text: #000000;
 }
 
 body {
