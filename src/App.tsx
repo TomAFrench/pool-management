@@ -3,7 +3,6 @@ import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import './App.css';
 import Web3Manager from 'components/Web3Manager';
-import Header from 'components/Common/Header';
 import Home from 'views/Home';
 import Private from 'views/Private';
 import Pool from 'views/Pool';
@@ -46,7 +45,7 @@ const App = () => {
     return (
         <Web3Manager>
             <HashRouter>
-                <Header />
+                {/* <Header /> */}
                 <Container>
                     <LeftContainer>
                         <LeftNav />

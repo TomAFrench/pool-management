@@ -51,7 +51,7 @@ body {
 
 .app-shell {
     background-color: var(--background);
-    height: calc(100vh - 78px);
+    height: 100vh;
     width: 100%;
     overflow-y: scroll;
 }
