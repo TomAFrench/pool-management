@@ -1,9 +1,8 @@
 import { action, observable, ObservableMap } from 'mobx';
 import RootStore from 'stores/Root';
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { backupUrls, supportedChainId } from 'provider/connectors';
-import { Interface } from '@ethersproject/abi';
 
 export enum ContractTypes {
     BPool = 'BPool',
@@ -48,15 +47,8 @@ type ChainDataMap = ObservableMap<number, ChainData>;
 
 export interface ProviderStatus {
     activeChainId: number;
-    account: string;
     library: any;
     active: boolean;
-    injectedLoaded: boolean;
-    injectedActive: boolean;
-    injectedChainId: number;
-    injectedWeb3: any;
-    backUpLoaded: boolean;
-    backUpWeb3: any;
     error: Error;
     activeProvider: any;
 }
@@ -71,14 +63,10 @@ export default class ProviderStore {
         this.chainData = { currentBlockNumber: -1 } as ChainData;
         this.providerStatus = {} as ProviderStatus;
         this.providerStatus.active = false;
-        this.providerStatus.injectedLoaded = false;
-        this.providerStatus.injectedActive = false;
-        this.providerStatus.backUpLoaded = false;
         this.providerStatus.activeProvider = null;
 
         this.handleNetworkChanged = this.handleNetworkChanged.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
     }
 
     getCurrentBlockNumber(): number {
@@ -141,97 +129,6 @@ export default class ProviderStore {
         if (this.providerStatus.active) await this.loadWeb3();
     }
 
-    @action handleAccountsChanged(accounts: string[]): void {
-        console.log(`[Provider] Accounts changed`);
-        const {
-            blockchainFetchStore,
-            addLiquidityFormStore,
-            removeLiquidityFormStore,
-        } = this.rootStore;
-        addLiquidityFormStore.closeModal();
-        removeLiquidityFormStore.closeModal();
-
-        if (accounts.length === 0) {
-            this.handleClose();
-        } else {
-            this.providerStatus.account = accounts[0];
-            // Loads pool & balance data for account
-            blockchainFetchStore.setFetchLoop(true);
-        }
-    }
-
-    @action async loadProvider(provider) {
-        try {
-            // remove any old listeners
-            if (
-                this.providerStatus.activeProvider &&
-                this.providerStatus.activeProvider.on
-            ) {
-                console.log(`[Provider] Removing Old Listeners`);
-                this.providerStatus.activeProvider.removeListener(
-                    'chainChanged',
-                    this.handleNetworkChanged
-                );
-                this.providerStatus.activeProvider.removeListener(
-                    'accountsChanged',
-                    this.handleAccountsChanged
-                );
-                this.providerStatus.activeProvider.removeListener(
-                    'close',
-                    this.handleClose
-                );
-                this.providerStatus.activeProvider.removeListener(
-                    'networkChanged',
-                    this.handleNetworkChanged
-                );
-            }
-
-            if (
-                this.providerStatus.library &&
-                this.providerStatus.library.close
-            ) {
-                console.log(`[Provider] Closing Old Library.`);
-                await this.providerStatus.library.close();
-            }
-
-            let web3 = new Web3Provider(provider);
-
-            if ((provider as any).isMetaMask) {
-                console.log(`[Provider] MetaMask Auto Refresh Off`);
-                (provider as any).autoRefreshOnNetworkChange = false;
-            }
-
-            if (provider.on) {
-                console.log(`[Provider] Subscribing Listeners`);
-                provider.on('chainChanged', this.handleNetworkChanged); // For now assume network/chain ids are same thing as only rare case when they don't match
-                provider.on('accountsChanged', this.handleAccountsChanged);
-                provider.on('close', this.handleClose);
-                provider.on('networkChanged', this.handleNetworkChanged);
-            }
-
-            let network = await web3.getNetwork();
-
-            const accounts = await web3.listAccounts();
-            let account = null;
-            if (accounts.length > 0) account = accounts[0];
-
-            this.providerStatus.injectedLoaded = true;
-            this.providerStatus.injectedChainId = network.chainId;
-            this.providerStatus.account = account;
-            this.providerStatus.injectedWeb3 = web3;
-            this.providerStatus.activeProvider = provider;
-            console.log(`[Provider] Provider loaded.`);
-        } catch (err) {
-            console.error(`[Provider] Loading Error`, err);
-            this.providerStatus.injectedLoaded = false;
-            this.providerStatus.injectedChainId = null;
-            this.providerStatus.account = null;
-            this.providerStatus.library = null;
-            this.providerStatus.active = false;
-            this.providerStatus.activeProvider = null;
-        }
-    }
-
     @action async loadWeb3(provider = null) {
         /*
         Handles loading web3 provider.
@@ -240,22 +137,14 @@ export default class ProviderStore {
         try {
             let web3 = new JsonRpcProvider(backupUrls[supportedChainId]);
             let network = await web3.getNetwork();
-            this.providerStatus.injectedActive = false;
-            this.providerStatus.backUpLoaded = true;
-            this.providerStatus.account = this.rootStore.gnosisStore.safeAddress;
             this.providerStatus.activeChainId = network.chainId;
-            this.providerStatus.backUpWeb3 = web3;
             this.providerStatus.library = web3;
             this.providerStatus.activeProvider =
                 backupUrls[supportedChainId];
             console.log(`[Provider] BackUp Provider Loaded & Active`);
         } catch (err) {
             console.error(`[Provider] loadWeb3 BackUp Error`, err);
-            this.providerStatus.injectedActive = false;
-            this.providerStatus.backUpLoaded = false;
-            this.providerStatus.account = null;
             this.providerStatus.activeChainId = null;
-            this.providerStatus.backUpWeb3 = null;
             this.providerStatus.library = null;
             this.providerStatus.active = false;
             this.providerStatus.activeProvider = null;
