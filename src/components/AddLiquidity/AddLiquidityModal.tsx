@@ -128,7 +128,6 @@ const ButtonWrapper = styled.div`
 `;
 
 enum ButtonAction {
-    UNLOCK,
     ADD_LIQUIDITY,
     REMOVE_LIQUIDITY,
 }
@@ -170,31 +169,6 @@ function useOnClickOutside(ref, handler) {
 }
 
 const AddLiquidityModal = observer((props: Props) => {
-    const findLockedToken = (
-        pool: Pool,
-        account: string
-    ): PoolToken | undefined => {
-        if (addLiquidityFormStore.depositType === DepositType.MULTI_ASSET) {
-            return pool.tokens.find(token => {
-                return !tokenStore.hasApproval(
-                    token.address,
-                    account,
-                    proxyAddress
-                );
-            });
-        } else {
-            const tokenAddress = addLiquidityFormStore.activeToken;
-            const token = pool.tokens.find(
-                token => token.address === tokenAddress
-            );
-            if (tokenStore.hasApproval(tokenAddress, account, proxyAddress)) {
-                return;
-            } else {
-                return token;
-            }
-        }
-    };
-
     const findFrontrunnableToken = (
         pool: Pool,
         account: string
@@ -353,14 +327,13 @@ const AddLiquidityModal = observer((props: Props) => {
             poolStore,
             tokenStore,
             providerStore,
-            proxyStore,
             addLiquidityFormStore,
             contractMetadataStore,
         },
     } = useStores();
 
     const history = useHistory();
-    const hasProxyInstance = proxyStore.hasInstance();
+    const hasProxyInstance = true //proxyStore.hasInstance();
 
     useEffect(() => {
         if (!hasProxyInstance) {
@@ -372,7 +345,6 @@ const AddLiquidityModal = observer((props: Props) => {
     const account = providerStore.providerStatus.account;
 
     const pool = poolStore.getPool(poolAddress);
-    const proxyAddress = proxyStore.getInstanceAddress();
 
     const validationStatus = addLiquidityFormStore.validationStatus;
     const hasValidInput = addLiquidityFormStore.hasValidInput();
@@ -390,34 +362,17 @@ const AddLiquidityModal = observer((props: Props) => {
     const userShare = calculateUserShare(pool, account, hasValidInput);
 
     let loading = true;
-    let lockedToken: PoolToken | undefined = undefined;
 
     if (pool && !account) {
         loading = false;
-    }
-
-    if (pool && account) {
-        const accountApprovalsLoaded = tokenStore.areAccountApprovalsLoaded(
-            poolStore.getPoolTokens(pool.address),
-            account,
-            proxyAddress
-        );
-
-        if (accountApprovalsLoaded) {
-            loading = false;
-            lockedToken = findLockedToken(pool, account);
-        }
     }
 
     const actionButtonHandler = async (
         action: ButtonAction,
         token?: PoolToken
     ) => {
-        if (action === ButtonAction.UNLOCK) {
-            // await tokenStore.approveMax(token.address, proxyAddress);
-        } else if (action === ButtonAction.ADD_LIQUIDITY) {
+        if (action === ButtonAction.ADD_LIQUIDITY) {
             // Add Liquidity
-
             if (addLiquidityFormStore.depositType === DepositType.MULTI_ASSET) {
                 const poolTokens = poolStore.calcPoolTokensByRatio(
                     pool,
@@ -827,42 +782,24 @@ const AddLiquidityModal = observer((props: Props) => {
     };
 
     const renderActionButton = () => {
-        if (lockedToken) {
-            return (
-                <ButtonWrapper>
-                    <Button
-                        text={`Unlock ${lockedToken.symbol}`}
-                        isActive={!!account}
-                        isPrimary={true}
-                        onClick={e =>
-                            actionButtonHandler(
-                                ButtonAction.UNLOCK,
-                                lockedToken
-                            )
-                        }
-                    />
-                </ButtonWrapper>
-            );
-        } else {
-            return (
-                <ButtonWrapper>
-                    <Button
-                        text={`Add Liquidity`}
-                        isActive={
-                            account &&
-                            hasValidInput &&
-                            !hasTransactionError &&
-                            !hasTokenError &&
-                            hasConfirmed
-                        }
-                        isPrimary={true}
-                        onClick={e =>
-                            actionButtonHandler(ButtonAction.ADD_LIQUIDITY)
-                        }
-                    />
-                </ButtonWrapper>
-            );
-        }
+        return (
+            <ButtonWrapper>
+                <Button
+                    text={`Add Liquidity`}
+                    isActive={
+                        account &&
+                        hasValidInput &&
+                        !hasTransactionError &&
+                        !hasTokenError &&
+                        hasConfirmed
+                    }
+                    isPrimary={true}
+                    onClick={e =>
+                        actionButtonHandler(ButtonAction.ADD_LIQUIDITY)
+                    }
+                />
+            </ButtonWrapper>
+        );
     };
 
     const modalOpen = addLiquidityFormStore.modalOpen;
