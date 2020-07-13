@@ -14,7 +14,7 @@ const OptionBase = styled.div`
     height: 36px;
     display: flex;
     justify-content: center;
-    border: 1px solid #41476b;
+    border: 1px solid var(--highlighted-selector-border);
     align-items: center;
     cursor: pointer;
 
@@ -31,11 +31,11 @@ const OptionBase = styled.div`
 
 const OptionInactive = styled(OptionBase)`
     background: rgba(255, 255, 255, 0.06);
-    color: #fafafa;
+    color: #000000;
 `;
 
 const OptionActive = styled(OptionBase)`
-    background: #41476b;
+    background: var(--highlighted-selector-background);
 `;
 
 const Option = ({ active, children, onClick }) => {
