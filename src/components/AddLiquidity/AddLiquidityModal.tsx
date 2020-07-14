@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
 import PoolOverview from '../Common/PoolOverview';
 import Button from '../Common/Button';
 import Checkbox from '../Common/Checkbox';
@@ -331,16 +330,6 @@ const AddLiquidityModal = observer((props: Props) => {
             contractMetadataStore,
         },
     } = useStores();
-
-    const history = useHistory();
-    const hasProxyInstance = true //proxyStore.hasInstance();
-
-    useEffect(() => {
-        if (!hasProxyInstance) {
-            addLiquidityFormStore.closeModal();
-            history.push('/setup');
-        }
-    }, [hasProxyInstance, addLiquidityFormStore, history]);
 
     const account = gnosisStore.safeAddress;
 
