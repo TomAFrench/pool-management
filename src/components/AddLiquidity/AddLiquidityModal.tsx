@@ -350,11 +350,7 @@ const AddLiquidityModal = observer((props: Props) => {
 
     const userShare = calculateUserShare(pool, account, hasValidInput);
 
-    let loading = true;
-
-    if (pool && !account) {
-        loading = false;
-    }
+    let loading = !(pool && account);
 
     const actionButtonHandler = async (
         action: ButtonAction,
