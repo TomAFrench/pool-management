@@ -11,7 +11,7 @@ import { Pool, PoolToken, UserShare } from '../../types';
 import { DepositType } from '../../stores/AddLiquidityForm';
 import { ValidationStatus } from '../../stores/actions/validators';
 import { EtherKey } from '../../stores/Token';
-import { bnum, formatPercentage, isTxReverted } from '../../utils/helpers';
+import { bnum, formatPercentage } from '../../utils/helpers';
 import { calcPoolOutGivenSingleIn } from '../../utils/math';
 import { BigNumber } from '../../utils/bignumber';
 
@@ -403,15 +403,11 @@ const AddLiquidityModal = observer((props: Props) => {
                     tokenAmountsIn,
                 });
 
-                const response = await poolStore.joinPool(
+                poolStore.joinPool(
                     pool.address,
                     poolTokens.toString(),
                     tokenAmountsIn
                 );
-
-                if (isTxReverted(response)) {
-                    addLiquidityFormStore.setTransactionError();
-                }
             } else {
                 const tokenInAddress = addLiquidityFormStore.activeToken;
                 const amount = new BigNumber(
@@ -429,16 +425,12 @@ const AddLiquidityModal = observer((props: Props) => {
                     minPoolAmountOut,
                 });
 
-                const response = await poolStore.joinswapExternAmountIn(
+                poolStore.joinswapExternAmountIn(
                     pool.address,
                     tokenInAddress,
                     tokenAmountIn.toString(),
                     minPoolAmountOut
                 );
-
-                if (isTxReverted(response)) {
-                    addLiquidityFormStore.setTransactionError();
-                }
             }
         }
     };

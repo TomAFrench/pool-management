@@ -216,7 +216,7 @@ const RemoveLiquidityModal = observer((props: Props) => {
         loading = false;
     }
 
-    const handleRemoveLiquidity = async () => {
+    const handleRemoveLiquidity = () => {
         const shareToWithdraw = removeLiquidityFormStore.getShareToWithdraw();
         const poolTokens = poolStore.getUserTokenPercentage(
             pool.address,
@@ -224,7 +224,7 @@ const RemoveLiquidityModal = observer((props: Props) => {
             shareToWithdraw
         );
         if (removeLiquidityFormStore.depositType === DepositType.MULTI_ASSET) {
-            await poolStore.exitPool(
+            poolStore.exitPool(
                 pool.address,
                 poolTokens.integerValue().toString(),
                 poolStore.formatZeroMinAmountsOut(pool.address)
@@ -232,7 +232,7 @@ const RemoveLiquidityModal = observer((props: Props) => {
         } else {
             const tokenOutAddress = removeLiquidityFormStore.activeToken;
             const minTokenAmountOut = '0';
-            await poolStore.exitswapPoolAmountIn(
+            poolStore.exitswapPoolAmountIn(
                 pool.address,
                 tokenOutAddress,
                 poolTokens.integerValue().toString(),
