@@ -107,13 +107,13 @@ const Message = styled.div`
 `;
 
 const Error = styled(Message)`
+    background-color: var(--error);
     border-color: var(--error);
-    color: var(--error);
 `;
 
 const Warning = styled(Message)`
+    background-color: var(--warning);
     border-color: var(--warning);
-    color: var(--warning);
     margin-bottom: 16px;
 `;
 

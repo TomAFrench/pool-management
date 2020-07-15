@@ -82,13 +82,15 @@ const Message = styled.div`
 `;
 
 const Error = styled(Message)`
+    background-color: var(--error);
     border-color: var(--error);
-    color: var(--error);
+    color: #000000;
 `;
 
 const Warning = styled(Message)`
+    background-color: var(--warning);
     border-color: var(--warning);
-    color: var(--warning);
+    color: #000000;
 `;
 
 const Notification = styled(Message)`
