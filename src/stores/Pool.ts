@@ -418,11 +418,11 @@ export default class PoolStore {
         } = this.rootStore;
 
         const pool = this.getPool(poolAddress)
+        const bActionsAddress = contractMetadataStore.getBActionsAddress()
         const approvalTransactions = pool.tokens.map((token, index) => (
-            gnosisStore.wrapTransaction(token.address, ContractTypes.TestToken, "approve",[poolAddress, maxAmountsIn[index]] )
+            gnosisStore.wrapTransaction(token.address, ContractTypes.TestToken, "approve",[bActionsAddress, maxAmountsIn[index]] )
         ))
 
-        const bActionsAddress = contractMetadataStore.getBActionsAddress()
         const joinPoolTransaction = gnosisStore.wrapTransaction(
             bActionsAddress,
             ContractTypes.BActions,
@@ -445,7 +445,7 @@ export default class PoolStore {
 
         const bActionsAddress = contractMetadataStore.getBActionsAddress();
 
-        const approvalTransaction = gnosisStore.wrapTransaction(tokenIn, ContractTypes.TestToken, "approve",[poolAddress, tokenAmountIn])
+        const approvalTransaction = gnosisStore.wrapTransaction(tokenIn, ContractTypes.TestToken, "approve",[bActionsAddress, tokenAmountIn])
 
         const joinPoolTransaction = gnosisStore.wrapTransaction(
             bActionsAddress,
