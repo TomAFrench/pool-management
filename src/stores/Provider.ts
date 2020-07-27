@@ -1,8 +1,8 @@
 import { action, observable, ObservableMap } from 'mobx';
 import RootStore from 'stores/Root';
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider } from '@ethersproject/providers'
-import { backupUrls, supportedChainId } from 'provider/connectors';
+import { getDefaultProvider } from '@ethersproject/providers'
+import { getSupportedChainName } from 'provider/connectors';
 
 export enum ContractTypes {
     BPool = 'BPool',
@@ -50,7 +50,6 @@ export interface ProviderStatus {
     library: any;
     active: boolean;
     error: Error;
-    activeProvider: any;
 }
 
 export default class ProviderStore {
@@ -63,7 +62,6 @@ export default class ProviderStore {
         this.chainData = { currentBlockNumber: -1 } as ChainData;
         this.providerStatus = {} as ProviderStatus;
         this.providerStatus.active = false;
-        this.providerStatus.activeProvider = null;
 
         this.handleNetworkChanged = this.handleNetworkChanged.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -135,19 +133,16 @@ export default class ProviderStore {
         */
 
         try {
-            let web3 = new JsonRpcProvider(backupUrls[supportedChainId]);
+            let web3 = getDefaultProvider(getSupportedChainName());
             let network = await web3.getNetwork();
             this.providerStatus.activeChainId = network.chainId;
             this.providerStatus.library = web3;
-            this.providerStatus.activeProvider =
-                backupUrls[supportedChainId];
             console.log(`[Provider] BackUp Provider Loaded & Active`);
         } catch (err) {
             console.error(`[Provider] loadWeb3 BackUp Error`, err);
             this.providerStatus.activeChainId = null;
             this.providerStatus.library = null;
             this.providerStatus.active = false;
-            this.providerStatus.activeProvider = null;
             this.providerStatus.error = new Error(ERRORS.NoWeb3);
             return;
         }
