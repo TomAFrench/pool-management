@@ -2,6 +2,7 @@
     "name": "balancer-dapp",
     "version": "0.1.0",
     "private": true,
+    "homepage": "./",
     "dependencies": {
         "@babel/core": "7.6.0",
         "@babel/plugin-proposal-decorators": "^7.6.0",
