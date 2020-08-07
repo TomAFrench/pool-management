@@ -89,8 +89,9 @@ const Message = styled.div`
 `;
 
 const Error = styled(Message)`
+    background-color: var(--error);
     border-color: var(--error);
-    color: var(--error);
+    color: #000000;
 `;
 
 const InfoPanelWrapper = styled.div`
