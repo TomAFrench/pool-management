@@ -59,6 +59,7 @@ const TokenName = styled.div`
     line-height: 19px;
     display: flex;
     align-items: center;
+    color: #000000;
 `;
 
 const TokenBalance = styled.div`
