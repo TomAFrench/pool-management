@@ -363,7 +363,7 @@ export default class PoolStore {
         poolAddress: string,
         poolAmountIn: string,
         minAmountsOut: string[]
-    ) : void  => {
+    ): void => {
         const { gnosisStore } = this.rootStore;
 
         console.debug('exitPool', {
@@ -376,10 +376,10 @@ export default class PoolStore {
             gnosisStore.wrapTransaction(
                 poolAddress,
                 ContractTypes.BPool,
-                "exitPool",
+                'exitPool',
                 [poolAmountIn, minAmountsOut]
             )
-        )
+        );
     };
 
     @action exitswapPoolAmountIn = (
@@ -401,35 +401,40 @@ export default class PoolStore {
             gnosisStore.wrapTransaction(
                 poolAddress,
                 ContractTypes.BPool,
-                "exitswapPoolAmountIn",
+                'exitswapPoolAmountIn',
                 [tokenOut, poolAmountIn, minAmountOut]
             )
-        )
+        );
     };
 
     @action joinPool = (
         poolAddress: string,
         poolAmountOut: string,
         maxAmountsIn: string[]
-    ) : void => {
-        const {
-            contractMetadataStore,
-            gnosisStore,
-        } = this.rootStore;
+    ): void => {
+        const { contractMetadataStore, gnosisStore } = this.rootStore;
 
-        const pool = this.getPool(poolAddress)
-        const bActionsAddress = contractMetadataStore.getBActionsAddress()
-        const approvalTransactions = pool.tokens.map((token, index) => (
-            gnosisStore.wrapTransaction(token.address, ContractTypes.TestToken, "approve",[bActionsAddress, maxAmountsIn[index]] )
-        ))
+        const pool = this.getPool(poolAddress);
+        const bActionsAddress = contractMetadataStore.getBActionsAddress();
+        const approvalTransactions = pool.tokens.map((token, index) =>
+            gnosisStore.wrapTransaction(
+                token.address,
+                ContractTypes.TestToken,
+                'approve',
+                [bActionsAddress, maxAmountsIn[index]]
+            )
+        );
 
         const joinPoolTransaction = gnosisStore.wrapTransaction(
             bActionsAddress,
             ContractTypes.BActions,
-            "joinPool",
+            'joinPool',
             [poolAddress, poolAmountOut.toString(), maxAmountsIn]
-        )
-        return gnosisStore.sendTransactions([...approvalTransactions, joinPoolTransaction]);
+        );
+        return gnosisStore.sendTransactions([
+            ...approvalTransactions,
+            joinPoolTransaction,
+        ]);
     };
 
     @action joinswapExternAmountIn = (
@@ -438,22 +443,27 @@ export default class PoolStore {
         tokenAmountIn: string,
         minPoolAmountOut: string
     ): void => {
-        const {
-            contractMetadataStore,
-            gnosisStore,
-        } = this.rootStore;
+        const { contractMetadataStore, gnosisStore } = this.rootStore;
 
         const bActionsAddress = contractMetadataStore.getBActionsAddress();
 
-        const approvalTransaction = gnosisStore.wrapTransaction(tokenIn, ContractTypes.TestToken, "approve",[bActionsAddress, tokenAmountIn])
+        const approvalTransaction = gnosisStore.wrapTransaction(
+            tokenIn,
+            ContractTypes.TestToken,
+            'approve',
+            [bActionsAddress, tokenAmountIn]
+        );
 
         const joinPoolTransaction = gnosisStore.wrapTransaction(
             bActionsAddress,
             ContractTypes.BActions,
-            "joinswapExternAmountIn",
+            'joinswapExternAmountIn',
             [poolAddress, tokenIn, tokenAmountIn, minPoolAmountOut]
-        )
+        );
 
-        gnosisStore.sendTransactions([approvalTransaction, joinPoolTransaction]);
+        gnosisStore.sendTransactions([
+            approvalTransaction,
+            joinPoolTransaction,
+        ]);
     };
 }
