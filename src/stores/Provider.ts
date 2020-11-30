@@ -1,7 +1,7 @@
 import { action, observable, ObservableMap } from 'mobx';
 import RootStore from 'stores/Root';
-import { Contract } from '@ethersproject/contracts'
-import { getDefaultProvider } from '@ethersproject/providers'
+import { Contract } from '@ethersproject/contracts';
+import { getDefaultProvider } from '@ethersproject/providers';
 import { getSupportedChainName } from 'provider/connectors';
 
 export enum ContractTypes {
@@ -99,10 +99,7 @@ export default class ProviderStore {
             });
     };
 
-    getContract(
-        type: ContractTypes,
-        address: string,
-    ): Contract {
+    getContract(type: ContractTypes, address: string): Contract {
         const library = this.providerStatus.library;
         return new Contract(address, schema[type], library);
     }
@@ -133,7 +130,10 @@ export default class ProviderStore {
         */
 
         try {
-            let web3 = getDefaultProvider(getSupportedChainName());
+            let web3 = getDefaultProvider(getSupportedChainName(), {
+                infura: process.env.REACT_APP_INFURA_KEY,
+                alchemy: process.env.REACT_APP_ALCHEMY_KEY,
+            });
             let network = await web3.getNetwork();
             this.providerStatus.activeChainId = network.chainId;
             this.providerStatus.library = web3;
