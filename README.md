@@ -2,6 +2,10 @@
 
 Pool management interface for users to add and remove liquidity to Balancer pools.
 
+**This repository is no longer being maintained**
+
+To follow future development of the Balancer frontend, development has moved to: https://github.com/TomAFrench/balancer-pools-safe-app
+
 ## Development
 
 -   Copy .env.example -> .env
